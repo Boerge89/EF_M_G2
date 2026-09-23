@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematik EF G2 | Kursportal</title>
+    <style>
+        :root {
+            --primary: #3182ce;
+            --primary-hover: #2b6cb0;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+            --accent: #38a169;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg);
+            color: var(--text);
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+
+        /* Header / Banner */
+        header {
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            color: white;
+            padding: 28px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            margin: 0 0 6px 0;
+            font-size: 1.8rem;
+        }
+
+        header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .badge-course {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        /* Haupt-Grid für das Portal */
+        .portal-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            color: #1a202c;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 6px;
+            margin-top: 0;
+            margin-bottom: 18px;
+        }
+
+        /* Modulkarten Grid */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .topic-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px;
+            background: #ffffff;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .topic-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .topic-tag {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .topic-title {
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .topic-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .btn-link {
+            display: inline-block;
+            text-align: center;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-link:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-disabled {
+            background-color: #e2e8f0;
+            color: #a0aec0;
+            cursor: not-allowed;
+            text-align: center;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: bold;
+        }
+
+        /* Sidebar Komponenten */
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        .info-date {
+            font-weight: bold;
+            color: var(--primary-hover);
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        .tool-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text);
+            background: #f7fafc;
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .tool-link:hover {
+            background: #ebf8ff;
+            border-color: var(--primary);
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 820px) {
+            .portal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- KURS-HEADER -->
+    <header>
+        <h1>Mathematik – Einführungsphase (EF)</h1>
+        <p>Digitale Lernmaterialien & Interaktive Übungen</p>
+        <span class="badge-course">Kurs G2</span>
+    </header>
+
+    <div class="portal-grid">
+        
+        <!-- HAUPTSPALTE: INHALTSFELDER AUS DEM BUCH -->
+        <main>
+            <div class="card">
+                <h2>Inhaltsfelder (Kapitel I – VI)</h2>
+                <div class="topics-grid">
+
+                    <!-- Kapitel I -->
+                    <div class="topic-card">
+                        <div>
+                            <div class="topic-tag">Kapitel I</div>
+                            <div class="topic-title">Funktionen – Bekanntes und Neues</div>
+                            <div class="topic-desc">
+                                Lineare & quadratische Funktionen, Potenzfunktionen, Transformationen, Trigonometrische Funktionen.
+                            </div>
+                        </div>
+                        <a href="potenzfunktionen.html" class="btn-link">Übung: Potenzfunktionen →</a>
+                    </div>
+
+                    <!-- Kapitel II -->
+                    <div class="topic-card">
+                        <div>
+                            <div class="topic-tag">Kapitel II</div>
+                            <div class="topic-title">Ganzrationale Funktionen</div>
+                            <div class="topic-desc">
+                                Ganzrationale Funktionen, Grenzverhalten, Symmetrie von Graphen, Nullstellen.
+                            </div>
+                        </div>
+                        <div class="btn-disabled">In Vorbereitung</div>
+                    </div>
+
+                    <!-- Kapitel III -->
+                    <div class="topic-card">
+                        <div>
+                            <div class="topic-tag">Kapitel III</div>
+                            <div class="topic-title">Ableitung</div>
+                            <div class="topic-desc">
+                                Mittlere & momentane Änderungsrate, Ableitungsfunktion, Ableitungsregeln, Tangente und Normale.
+                            </div>
+                        </div>
+                        <div class="btn-disabled">In Vorbereitung</div>
+                    </div>
+
+                    <!-- Kapitel IV -->
+                    <div class="topic-card">
+                        <div>
+                            <div class="topic-tag">Kapitel IV</div>
+                            <div class="topic-title">Untersuchung von Funktionen</div>
+                            <div class="topic-desc">
+                                Monotonie, Extremstellen, Krümmungsverhalten, Wendestellen, Sachzusammenhänge.
+                            </div>
+                        </div>
+                        <div class="btn-disabled">In Vorbereitung</div>
+                    </div>
+
+                    <!-- Kapitel V -->
+                    <div class="topic-card">
+                        <div>
+                            <div class="topic-tag">Kapitel V</div>
+                            <div class="topic-title">Vektoren</div>
+                            <div class="topic-desc">
+                                Punkte und Figuren im Raum, Vektoren, Rechnen mit Vektoren.
+                            </div>
+                        </div>
+                        <div class="btn-disabled">In Vorbereitung</div>
+                    </div>
+
+                    <!-- Kapitel VI -->
+                    <div class="topic-card">
+                        <div>
+                            <div class="topic-tag">Kapitel VI</div>
+                            <div class="topic-title">Geraden im Raum</div>
+                            <div class="topic-desc">
+                                Geraden im Raum, Parametergleichungen, Gegenseitige Lage, Modellieren von Bewegungen.
+                            </div>
+                        </div>
+                        <div class="btn-disabled">In Vorbereitung</div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <!-- SIDEBAR: TERMINE & TOOLS -->
+        <aside>
+            <div class="card">
+                <h2>Aktuelles & Termine</h2>
+                <ul class="info-list">
+                    <li>
+                        <span class="info-date">1. Klausur</span>
+                        Mittwoch, 07.10.2026
+                    </li>
+                    <li>
+                        <span class="info-date">2. Klausur</span>
+                        Mittwoch, 02.12.2026
+                    </li>
+                    <li>
+                        <span class="info-date">Kapitel I: Potenzfunktionen</span>
+                        Interaktive Übung zu den 4 Grundfällen online verfügbar.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Digitale Werkzeuge</h2>
+                <a href="https://www.geogebra.org/calculator" target="_blank" class="tool-link">
+                    🌐 GeoGebra Grafikrechner
+                </a>
+                <a href="https://www.geogebra.org/3d" target="_blank" class="tool-link">
+                    🧊 GeoGebra 3D Rechner
+                </a>
+            </div>
+        </aside>
+
+    </div>
+
+</body>
+</html>
