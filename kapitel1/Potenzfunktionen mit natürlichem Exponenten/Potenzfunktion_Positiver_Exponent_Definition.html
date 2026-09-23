@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potenzfunktionen: Lückentext, 4 Fälle & Interaktiver Graph</title>
+    <style>
+        :root {
+            --primary: #3182ce;
+            --primary-hover: #2b6cb0;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --border: #e2e8f0;
+            --active-bg: #ebf8ff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            background-color: var(--bg);
+            color: var(--text);
+            max-width: 1180px; /* Optimal angepasst für iPad-Querformat */
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Layout-Container für Teil 2 & Teil 3 nebeneinander */
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            color: #1a202c;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 6px;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        h2 {
+            font-size: 1.15rem;
+            color: var(--primary-hover);
+            margin-top: 16px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        select {
+            font-size: 0.9rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e0;
+            background-color: #edf2f7;
+            color: var(--text);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        select.correct {
+            border-color: #38a169;
+            background-color: #c6f6d5;
+            color: #22543d;
+        }
+
+        select.incorrect {
+            border-color: #e53e3e;
+            background-color: #fed7d7;
+            color: #742a2a;
+        }
+
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        button.btn-check {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button.btn-check:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #feedback {
+            margin-top: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* 4-Fälle-Grid */
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .case-card {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            position: relative;
+        }
+
+        .case-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+        }
+
+        .case-card.active {
+            border-color: var(--primary);
+            background-color: var(--active-bg);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .case-card.active::after {
+            content: "✓ Aktiv";
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: var(--primary);
+            background: #dbeafe;
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .case-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .case-desc {
+            font-size: 0.78rem;
+            color: #718096;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+
+        .case-svg {
+            width: 85px;
+            height: 85px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* Interaktiver Plotter */
+        .plotter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sliders-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+            background: #f7fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-sizing: border-box;
+        }
+
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        canvas {
+            background: #ffffff;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 420px;
+            height: auto;
+            aspect-ratio: 1 / 1;
+        }
+
+        .info-box {
+            width: 100%;
+            background: #ebf8ff;
+            border-left: 4px solid var(--primary);
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            box-sizing: border-box;
+        }
+
+        .info-box span {
+            font-weight: bold;
+            color: var(--primary-hover);
+        }
+
+        /* Responsive Fallback für kleine Hochformat-Bildschirme */
+        @media (max-width: 820px) {
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TEIL 1: INTERAKTIVER LÜCKENTEXT -->
+<div class="card">
+    <h1>1. Potenzfunktionen mit natürlichen Exponenten</h1>
+    <p>
+        Eine Funktion mit einer Gleichung der Form <i>f(x) = a · x<sup>n</sup></i> 
+        (mit <i>a ≠ 0</i> und <i>n ∈ ℕ</i>) nennt man Potenzfunktion 
+        <select data-answer="n-ten Grades">
+            <option value="">-- Bitte wählen --</option>
+            <option value="n-ten Grades">n-ten Grades</option>
+            <option value="ersten Grades">ersten Grades</option>
+            <option value="quadratischer Natur">quadratischer Natur</option>
+        </select>.
+    </p>
+
+    <h2>Eigenschaften von Potenzfunktionen mit natürlichen Exponenten</h2>
+    <ul>
+        <li>
+            Der Graph verläuft durch den 
+            <select data-answer="Ursprung O(0|0)">
+                <option value="">-- Bitte wählen --</option>
+                <option value="Ursprung O(0|0)">Ursprung O(0|0)</option>
+                <option value="Punkt P(1|1)">Punkt P(1|1)</option>
+                <option value="Scheitelpunkt S(0|1)">Scheitelpunkt S(0|1)</option>
+            </select>.
+        </li>
+        <li>
+            Der Parameter <b>a</b> beschreibt den 
+            <select data-answer="Streckfaktor">
+                <option value="">-- Bitte wählen --</option>
+                <option value="Streckfaktor">Streckfaktor</option>
+                <option value="Y-Achsenabschnitt">Y-Achsenabschnitt</option>
+                <option value="Exponent">Exponent</option>
+            </select>.<br>
+            Für <i>a &lt; -1</i> bzw. <i>a &gt; 1</i> wird der Graph im Vergleich zum Graphen von <i>g(x) = x<sup>n</sup></i> in y-Richtung 
+            <select data-answer="gestreckt">
+                <option value="">-- Bitte wählen --</option>
+                <option value="gestreckt">gestreckt</option>
+                <option value="gestaucht">gestaucht</option>
+                <option value="verschoben">verschoben</option>
+            </select>, für <i>-1 &lt; a &lt; 1</i> wird er 
+            <select data-answer="gestaucht">
+                <option value="">-- Bitte wählen --</option>
+                <option value="gestaucht">gestaucht</option>
+                <option value="gestreckt">gestreckt</option>
+                <option value="gespiegelt">gespiegelt</option>
+            </select>.<br>
+            Für <i>a &lt; 0</i> wird der Graph zudem an der 
+            <select data-answer="x-Achse">
+                <option value="">-- Bitte wählen --</option>
+                <option value="x-Achse">x-Achse</option>
+                <option value="y-Achse">y-Achse</option>
+                <option value="Diagonale">Diagonale</option>
+            </select> gespiegelt.
+        </li>
+        <li>
+            Ist <b>n gerade</b>, so ist der Graph 
+            <select data-answer="achsensymmetrisch zur y-Achse">
+                <option value="">-- Bitte wählen --</option>
+                <option value="achsensymmetrisch zur y-Achse">achsensymmetrisch zur y-Achse</option>
+                <option value="punktsymmetrisch zum Ursprung">punktsymmetrisch zum Ursprung</option>
+                <option value="asymmetrisch">asymmetrisch</option>
+            </select> und verläuft durch die Punkte <i>P(-1|a)</i> und <i>Q(</i><select data-answer="1|a">
+                <option value="">-- Bitte wählen --</option>
+                <option value="1|a">1|a</option>
+                <option value="1|-a">1|-a</option>
+                <option value="a|1">a|1</option>
+            </select><i>)</i>.
+        </li>
+        <li>
+            Ist <b>n ungerade</b>, so ist der Graph 
+            <select data-answer="punktsymmetrisch zum Ursprung">
+                <option value="">-- Bitte wählen --</option>
+                <option value="punktsymmetrisch zum Ursprung">punktsymmetrisch zum Ursprung</option>
+                <option value="achsensymmetrisch zur y-Achse">achsensymmetrisch zur y-Achse</option>
+                <option value="achsensymmetrisch zur x-Achse">achsensymmetrisch zur x-Achse</option>
+            </select> und verläuft durch die Punkte <i>P(</i><select data-answer="-1|-a">
+                <option value="">-- Bitte wählen --</option>
+                <option value="-1|-a">-1|-a</option>
+                <option value="-1|a">-1|a</option>
+                <option value="1|-a">1|-a</option>
+            </select><i>)</i> und <i>Q(1|a)</i>.
+        </li>
+    </ul>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkAnswers()">Antworten überprüfen</button>
+        <div id="feedback"></div>
+    </div>
+</div>
+
+<!-- ZWEISPALTIER CONTAINER FÜR TEIL 2 UND TEIL 3 -->
+<div class="split-container">
+
+    <!-- TEIL 2: DIE 4 FÄLLE IM ÜBERBLICK -->
+    <div class="card">
+        <h1>2. Die 4 grundlegenden Fälle</h1>
+        <p style="font-size: 0.88rem; margin-bottom: 10px;">Klicke auf einen Fall, um den Graphen rechts einzustellen:</p>
+
+        <div class="cases-grid">
+            <!-- Fall 1 -->
+            <div class="case-card" id="case1" onclick="setPreset(2, 1.5)">
+                <div class="case-title">n gerade, a &gt; 0</div>
+                <div class="case-desc">Nach oben geöffnete Parabel</div>
+                <svg class="case-svg" viewBox="-50 -50 100 100">
+                    <line x1="-45" y1="0" x2="45" y2="0" stroke="#a0aec0" stroke-width="2"/>
+                    <line x1="0" y1="45" x2="0" y2="-45" stroke="#a0aec0" stroke-width="2"/>
+                    <path d="M -35 -35 Q 0 10 35 -35" fill="none" stroke="#e53e3e" stroke-width="3"/>
+                </svg>
+            </div>
+
+            <!-- Fall 2 -->
+            <div class="case-card" id="case2" onclick="setPreset(3, 1.0)">
+                <div class="case-title">n ungerade, a &gt; 0</div>
+                <div class="case-desc">Unten links nach oben rechts</div>
+                <svg class="case-svg" viewBox="-50 -50 100 100">
+                    <line x1="-45" y1="0" x2="45" y2="0" stroke="#a0aec0" stroke-width="2"/>
+                    <line x1="0" y1="45" x2="0" y2="-45" stroke="#a0aec0" stroke-width="2"/>
+                    <path d="M -35 35 C -10 35 0 0 35 -35" fill="none" stroke="#e53e3e" stroke-width="3"/>
+                </svg>
+            </div>
+
+            <!-- Fall 3 -->
+            <div class="case-card" id="case3" onclick="setPreset(2, -1.5)">
+                <div class="case-title">n gerade, a &lt; 0</div>
+                <div class="case-desc">Nach unten geöffnete Parabel</div>
+                <svg class="case-svg" viewBox="-50 -50 100 100">
+                    <line x1="-45" y1="0" x2="45" y2="0" stroke="#a0aec0" stroke-width="2"/>
+                    <line x1="0" y1="45" x2="0" y2="-45" stroke="#a0aec0" stroke-width="2"/>
+                    <path d="M -35 35 Q 0 -10 35 35" fill="none" stroke="#e53e3e" stroke-width="3"/>
+                </svg>
+            </div>
+
+            <!-- Fall 4 -->
+            <div class="case-card" id="case4" onclick="setPreset(3, -1.0)">
+                <div class="case-title">n ungerade, a &lt; 0</div>
+                <div class="case-desc">Oben links nach unten rechts</div>
+                <svg class="case-svg" viewBox="-50 -50 100 100">
+                    <line x1="-45" y1="0" x2="45" y2="0" stroke="#a0aec0" stroke-width="2"/>
+                    <line x1="0" y1="45" x2="0" y2="-45" stroke="#a0aec0" stroke-width="2"/>
+                    <path d="M -35 -35 C -10 -35 0 0 35 35" fill="none" stroke="#e53e3e" stroke-width="3"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEIL 3: INTERAKTIVER GRAPH MIT SCHIEBEREGLERN -->
+    <div class="card">
+        <h1>3. Interaktiver Graph</h1>
+
+        <div class="plotter-container">
+            <div class="sliders-grid">
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <label for="paramA">Streckfaktor a:</label>
+                        <span id="valA">1.0</span>
+                    </div>
+                    <input type="range" id="paramA" min="-3.0" max="3.0" step="0.1" value="1.0">
+                </div>
+
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <label for="paramN">Exponent n:</label>
+                        <span id="valN">2</span>
+                    </div>
+                    <input type="range" id="paramN" min="1" max="6" step="1" value="2">
+                </div>
+            </div>
+
+            <canvas id="graphCanvas" width="500" height="500"></canvas>
+
+            <div class="info-box" id="graphInfo">
+                Gleichung: <span id="eqText">f(x) = 1.0 · x²</span><br>
+                Symmetrie: <span id="symText">Achsensymmetrisch zur y-Achse</span><br>
+                Punkte: <span id="pointsText">O(0|0), P(-1|1.0), Q(1|1.0)</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- LÜCKENTEXT-LOGIK ---
+    function checkAnswers() {
+        const selects = document.querySelectorAll('select');
+        let correctCount = 0;
+
+        selects.forEach(select => {
+            const selectedValue = select.value;
+            const correctAnswer = select.dataset.answer;
+
+            if (selectedValue === correctAnswer) {
+                select.className = 'correct';
+                correctCount++;
+            } else {
+                select.className = 'incorrect';
+            }
+        });
+
+        const feedback = document.getElementById('feedback');
+        if (correctCount === selects.length) {
+            feedback.style.color = '#276749';
+            feedback.textContent = `Perfekt! Alle ${correctCount} von ${selects.length} Lücken sind richtig ausgefüllt.`;
+        } else {
+            feedback.style.color = '#c53030';
+            feedback.textContent = `${correctCount} von ${selects.length} Lücken sind richtig. Überprüfe die rot markierten Felder!`;
+        }
+    }
+
+    // --- GRAPH- & PRESET-LOGIK ---
+    const canvas = document.getElementById('graphCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const sliderA = document.getElementById('paramA');
+    const sliderN = document.getElementById('paramN');
+
+    const valA = document.getElementById('valA');
+    const valN = document.getElementById('valN');
+
+    const eqText = document.getElementById('eqText');
+    const symText = document.getElementById('symText');
+    const pointsText = document.getElementById('pointsText');
+
+    const xMin = -3, xMax = 3;
+    const yMin = -5, yMax = 5;
+
+    function toScreenX(x) {
+        return ((x - xMin) / (xMax - xMin)) * canvas.width;
+    }
+
+    function toScreenY(y) {
+        return canvas.height - ((y - yMin) / (yMax - yMin)) * canvas.height;
+    }
+
+    function drawCoordinateSystem() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = '#edf2f7';
+        ctx.lineWidth = 1;
+
+        for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+            ctx.beginPath();
+            ctx.moveTo(toScreenX(x), 0);
+            ctx.lineTo(toScreenX(x), canvas.height);
+            ctx.stroke();
+        }
+        for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+            ctx.beginPath();
+            ctx.moveTo(0, toScreenY(y));
+            ctx.lineTo(canvas.width, toScreenY(y));
+            ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#a0aec0';
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        ctx.moveTo(0, toScreenY(0));
+        ctx.lineTo(canvas.width, toScreenY(0));
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(toScreenX(0), 0);
+        ctx.lineTo(toScreenX(0), canvas.height);
+        ctx.stroke();
+
+        ctx.fillStyle = '#718096';
+        ctx.font = '12px Arial';
+
+        for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+            if (x !== 0) ctx.fillText(x, toScreenX(x) - 4, toScreenY(0) + 15);
+        }
+        for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+            if (y !== 0) ctx.fillText(y, toScreenX(0) + 6, toScreenY(y) + 4);
+        }
+    }
+
+    function drawPoint(x, y, label, color = '#e53e3e') {
+        const sx = toScreenX(x);
+        const sy = toScreenY(y);
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 5, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.fillStyle = '#1a202c';
+        ctx.font = 'bold 12px Arial';
+        ctx.fillText(label, sx + 8, sy - 8);
+    }
+
+    function updateActiveCaseCard(n, a) {
+        document.querySelectorAll('.case-card').forEach(card => card.classList.remove('active'));
+
+        if (a === 0) return;
+
+        const isEven = n % 2 === 0;
+
+        if (isEven && a > 0) {
+            document.getElementById('case1').classList.add('active');
+        } else if (!isEven && a > 0) {
+            document.getElementById('case2').classList.add('active');
+        } else if (isEven && a < 0) {
+            document.getElementById('case3').classList.add('active');
+        } else if (!isEven && a < 0) {
+            document.getElementById('case4').classList.add('active');
+        }
+    }
+
+    function drawGraph() {
+        let a = parseFloat(sliderA.value);
+        const n = parseInt(sliderN.value);
+
+        if (a === 0) {
+            a = 0.1;
+            sliderA.value = 0.1;
+        }
+
+        valA.textContent = a.toFixed(1);
+        valN.textContent = n;
+
+        updateActiveCaseCard(n, a);
+        drawCoordinateSystem();
+
+        ctx.strokeStyle = '#3182ce';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+
+        let isFirst = true;
+        const step = 0.01;
+
+        for (let x = xMin; x <= xMax; x += step) {
+            const y = a * Math.pow(x, n);
+            const sx = toScreenX(x);
+            const sy = toScreenY(y);
+
+            if (isFirst) {
+                ctx.moveTo(sx, sy);
+                isFirst = false;
+            } else {
+                ctx.lineTo(sx, sy);
+            }
+        }
+        ctx.stroke();
+
+        const isEven = n % 2 === 0;
+
+        drawPoint(0, 0, 'O(0|0)');
+        drawPoint(1, a, `Q(1|${a.toFixed(1)})`);
+
+        const py = isEven ? a : -a;
+        const pLabel = isEven ? `P(-1|${a.toFixed(1)})` : `P(-1|${(-a).toFixed(1)})`;
+        drawPoint(-1, py, pLabel);
+
+        const expStr = n === 1 ? 'x' : `x<sup>${n}</sup>`;
+        eqText.innerHTML = `f(x) = ${a.toFixed(1)} · ${expStr}`;
+
+        if (isEven) {
+            symText.textContent = 'Achsensymmetrisch zur y-Achse (n gerade)';
+            pointsText.textContent = `O(0|0), P(-1|${a.toFixed(1)}), Q(1|${a.toFixed(1)})`;
+        } else {
+            symText.textContent = 'Punktsymmetrisch zum Ursprung (n ungerade)';
+            pointsText.textContent = `O(0|0), P(-1|${(-a).toFixed(1)}), Q(1|${a.toFixed(1)})`;
+        }
+    }
+
+    function setPreset(n, a) {
+        sliderN.value = n;
+        sliderA.value = a;
+        drawGraph();
+    }
+
+    sliderA.addEventListener('input', drawGraph);
+    sliderN.addEventListener('input', drawGraph);
+
+    drawGraph();
+</script>
+
+</body>
+</html>
